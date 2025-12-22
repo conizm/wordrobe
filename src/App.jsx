@@ -263,9 +263,10 @@ const Toast = ({ msg, onClose }) => {
     useEffect(() => {
         const timer = setTimeout(onClose, 3000);
         return () => clearTimeout(timer);
-    }, []);
+    }, [onClose]);
+
     return (
-        <div className="fixed bottom-32 left-1/2 toast-anim neu-flat px-6 py-3 rounded-full text-sm text-[#258FAF] font-bold z-[100] shadow-lg text-center whitespace-nowrap bg-white border border-gray-100">
+        <div className="fixed bottom-32 left-1/2 -translate-x-1/2 toast-anim neu-flat bg-[#F8FAFC] px-6 py-4 rounded-2xl text-sm text-[#258FAF] font-bold z-[120] border border-white w-[85%] max-w-[320px] shadow-xl">
             {msg}
         </div>
     );
@@ -1661,7 +1662,7 @@ export default function App() {
     }
 
 if (Notification.permission === 'granted') {
-        setToastMsg("通知は有効です。オフにする場合はブラウザや端末の設定から変更してください。");
+        setToastMsg("通知設定済。解除は端末の設定から");
         
         try {
             const registration = await navigator.serviceWorker.ready;
