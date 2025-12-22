@@ -1,11 +1,11 @@
 // public/sw.js
 
-const CACHE_NAME = 'wordrobe-v3-new'; 
+const CACHE_NAME = 'wordrobe-v4-subdomain'; 
 const urlsToCache = [
-  '/wordrobe/',
-  '/wordrobe/index.html',
-  '/wordrobe/manifest.webmanifest',
-  '/wordrobe/images/wordrobe-icon.png'
+  '/',
+  '/index.html',
+  '/manifest.webmanifest',
+  '/images/wordrobe-icon.png'
 ];
 
 self.addEventListener('install', (event) => {
