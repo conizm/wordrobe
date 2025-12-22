@@ -1654,50 +1654,59 @@ export default function App() {
         }
     };
 
-    const requestNotificationPermission = async () => {
-        if (!('Notification' in window)) {
-            setToastMsg("このブラウザは通知をサポートしていません");
-            return;
-        }
-        try {
-            const permission = await Notification.requestPermission();
-            if (permission === 'granted') {
-                const messaging = firebase.messaging();
-                messaging.onMessage((payload) => {
-                    console.log('Message received. ', payload);
-                    const notificationTitle = payload.notification.title;
-                    const notificationOptions = {
-                        body: payload.notification.body,
-                        icon: 'https://conizm.github.io/wordrobe/images/wordrobe-icon.png'
-                    };
-                    new Notification(notificationTitle, notificationOptions);
-                });
-                const registration = await navigator.serviceWorker.ready;
-                const token = await messaging.getToken({ 
-                    vapidKey: "BP12NDn7Ec3A2NNYwwyiRsplOpSNifZEHeq4W2cPWyXpIIlER3tp9OkW5V4U0LEJT-dzJ4tkqVp3_iIlBUAaVjU", 
-                    serviceWorkerRegistration: registration 
-                });
-                if (token) {
-                    setToastMsg("通知設定が完了しました！");
-                    if (user) {
-                        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                        await db_firebase.collection('users').doc(user.uid).update({ 
-                            fcmToken: token,
-                            timeZone: timeZone,
-                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                    }
-                } else {
-                    setToastMsg("トークンが取得できませんでした");
+ const requestNotificationPermission = async () => {
+    if (!('Notification' in window)) {
+        setToastMsg("このブラウザは通知をサポートしていません");
+        return;
+    }
+
+    try {
+        const permission = await Notification.requestPermission();
+        
+        if (permission === 'granted') {
+
+            setToastMsg("通知を設定中..."); 
+
+            const messaging = firebase.messaging();
+
+            messaging.onMessage((payload) => {
+                console.log('Message received. ', payload);
+                const notificationTitle = payload.notification.title;
+                const notificationOptions = {
+                    body: payload.notification.body,
+                    icon: 'https://conizm.github.io/wordrobe/images/wordrobe-icon.png'
+                };
+                new Notification(notificationTitle, notificationOptions);
+            });
+
+            const registration = await navigator.serviceWorker.ready;
+            const token = await messaging.getToken({ 
+                vapidKey: "BP12NDn7Ec3A2NNYwwyiRsplOpSNifZEHeq4W2cPWyXpIIlER3tp9OkW5V4U0LEJT-dzJ4tkqVp3_iIlBUAaVjU", 
+                serviceWorkerRegistration: registration 
+            });
+
+            if (token) {
+                setToastMsg("通知設定が完了しました！🔔");
+
+                if (user) {
+                    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    await db_firebase.collection('users').doc(user.uid).update({ 
+                        fcmToken: token,
+                        timeZone: timeZone,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
                 }
             } else {
-                setToastMsg("通知が許可されませんでした");
+                setToastMsg("トークンが取得できませんでした");
             }
-        } catch (error) {
-            console.error("通知設定エラー:", error);
-            setToastMsg(`エラー: ${error.message}`);
+        } else {
+            setToastMsg("通知が許可されませんでした");
         }
-    };
+    } catch (error) {
+        console.error("通知設定エラー:", error);
+        setToastMsg(`エラーが発生しました`);
+    }
+};
 
     const handleUpdateWord = async (wordData) => {
         setSavedWords(prev => prev.map(w => w.word === wordData.word ? { ...w, ...wordData } : w));
