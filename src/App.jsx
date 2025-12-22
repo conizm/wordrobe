@@ -1660,6 +1660,27 @@ export default function App() {
         return;
     }
 
+if (Notification.permission === 'granted') {
+        setToastMsg("通知は有効です。オフにする場合はブラウザや端末の設定から変更してください。");
+        
+        try {
+            const registration = await navigator.serviceWorker.ready;
+            const messaging = firebase.messaging();
+            const token = await messaging.getToken({ 
+                vapidKey: "BP12NDn7Ec3A2NNYwwyiRsplOpSNifZEHeq4W2cPWyXpIIlER3tp9OkW5V4U0LEJT-dzJ4tkqVp3_iIlBUAaVjU", 
+                serviceWorkerRegistration: registration 
+            });
+            if (token && user) {
+                await db_firebase.collection('users').doc(user.uid).update({ 
+                    fcmToken: token,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            }
+        } catch (e) { console.error(e); }
+        
+        return; // メッセージを出したので、許可ダイアログを出す処理（以下）には進まない
+    }
+
     try {
         const permission = await Notification.requestPermission();
         
@@ -1686,7 +1707,7 @@ export default function App() {
             });
 
             if (token) {
-                setToastMsg("通知設定が完了しました！🔔");
+                setToastMsg("通知設定が完了しました");
 
                 if (user) {
                     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
