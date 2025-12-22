@@ -17,7 +17,7 @@ const messaging = firebase.messaging();
 // ==========================================
 // 2. キャッシュの設定 (PWA用)
 // ==========================================
-const CACHE_NAME = 'wordrobe-v5-fixed'; // バージョンを上げました
+const CACHE_NAME = 'wordrobe-v6-zombie-killer';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -37,7 +37,11 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('fetch', (event) => {
   // Firebaseの通信などはキャッシュしないように除外
-  if (event.request.url.includes('firebase') || event.request.url.includes('googleapis')) {
+if (
+    event.request.url.includes('firebase') || 
+    event.request.url.includes('googleapis') ||
+    event.request.url.includes('script.google.com')
+) {
     return;
   }
 
