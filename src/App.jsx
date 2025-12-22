@@ -6,7 +6,7 @@ import 'firebase/compat/firestore';
 import 'firebase/compat/analytics';
 import 'firebase/compat/messaging';
 
-const myGasProxy = "https://script.google.com/macros/s/AKfycbxkTyO-y_CxPQ6H4XkH95YBNjEbwL6Xqk8jvpE8gKQxD7ndo1-KToRUfZejtUaK89jp/exec";
+const myGasProxy = "https://script.google.com/macros/s/AKfycbx86khRAr6tMPAnVbBzMoWNIJ5zjLGDYNJePaujCr1d3LOZvAi3ihnVJkQSVUnOD5YN/exec";
 
 let db_firebase = null;
 let auth = null;
