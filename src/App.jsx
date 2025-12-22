@@ -56,7 +56,7 @@ const translateText = async (text, langPair = "en|ja") => {
     const [source, target] = langPair.split('|');
     const gasUrl = `${myGasProxy}?text=${encodeURIComponent(text)}&source=${source}&target=${target}`;
     try {
-        const res = await fetchWithTimeout(gasUrl, {}, 4000);
+        const res = await fetchWithTimeout(gasUrl, {}, 10000);
         if (!res.ok) return null;
         const data = await res.json();
         return data.translation;
