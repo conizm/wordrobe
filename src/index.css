@@ -1,0 +1,200 @@
+@import "tailwindcss";
+
+
+:root {
+    --bg-color: #F8FAFC;
+    --text-main: #475569;
+    --accent: #258FAF;
+    --shadow-light: #FFFFFF;
+    --shadow-dark: #E6EFF5;
+    --safe-top: env(safe-area-inset-top, 20px);
+    --safe-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+body {
+    font-family: 'Noto Sans JP', sans-serif !important; /* フォントを強制 */
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    line-height: 1.5;
+}
+
+.allow-select {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+}
+
+#error-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    z-index: 9999;
+    padding: 20px;
+    color: #ef4444;
+    font-family: monospace;
+    overflow: auto;
+}
+
+input, textarea {
+    font-size: 16px !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    pointer-events: auto !important;
+    transform: translate3d(0,0,0);
+}
+
+.h-screen-safe {
+    height: 100vh;
+    height: 100dvh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+header.custom-header {
+    width: 100%;
+    margin: 0 !important;
+    border-radius: 0 0 24px 24px !important;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 20px) !important;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: auto !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 50;
+    background: var(--bg-color);
+    box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+    transition: all 0.3s ease;
+}
+
+@media (min-width: 768px) {
+    header.custom-header {
+        padding-top: 24px !important;
+        padding-bottom: 24px !important;
+    }
+}
+
+nav.custom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: var(--bg-color);
+    padding-bottom: max(var(--safe-bottom), 15px) !important;
+    padding-top: 10px;
+    height: auto !important;
+    min-height: 80px;
+    border-radius: 24px 24px 0 0 !important;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0px -4px 10px var(--shadow-dark);
+    margin: 0 !important;
+}
+
+main.custom-main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    padding-bottom: calc(90px + var(--safe-bottom)) !important;
+    position: relative;
+    z-index: 0;
+}
+
+.neu-flat {
+    background: var(--bg-color);
+    box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+    border-radius: 16px;
+    border: none;
+}
+.neu-pressed {
+    background: var(--bg-color);
+    box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+    border-radius: 12px;
+}
+.neu-btn {
+    background: var(--bg-color);
+    box-shadow: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light);
+    border-radius: 12px;
+    transition: transform 0.1s;
+}
+.neu-btn:active {
+    box-shadow: inset 2px 2px 4px var(--shadow-dark), inset -2px -2px 4px var(--shadow-light);
+    transform: scale(0.98);
+}
+.neu-input {
+    background: var(--bg-color);
+    box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+    border-radius: 16px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none; /* 標準プロパティを追加して警告を消す */
+}
+
+.fade-in { animation: fadeIn 0.4s ease-out forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+@keyframes toastFadeIn {
+    from { opacity: 0; transform: translate(-50%, 20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+.toast-anim {
+    animation: toastFadeIn 0.4s ease-out forwards;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.slide-in-right { animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+
+.slide-out-left { animation: slideOutLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+@keyframes slideOutLeft { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-50px); } }
+
+.slide-out-right { animation: slideOutRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+@keyframes slideOutRight { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(50px); } }
+
+.slide-up { animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+@keyframes logoPop {
+    0% { opacity: 0; transform: scale(0.9); }
+    40% { opacity: 1; transform: scale(1); }
+    90% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.1); }
+}
+.logo-anim {
+    animation: logoPop 2.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.card-flip { perspective: 1000px; }
+.card-inner { 
+    transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); 
+    transform-style: preserve-3d; 
+    position: relative; 
+    width: 100%; 
+    height: 100%; 
+    transform-origin: center center;
+}
+.card-front, .card-back { 
+    backface-visibility: hidden; 
+    -webkit-backface-visibility: hidden; 
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    top: 0; 
+    left: 0;
+}
+.card-back { transform: rotateY(180deg); }
+.flipped .card-inner { transform: rotateY(180deg); }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
