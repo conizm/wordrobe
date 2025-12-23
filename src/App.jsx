@@ -1597,26 +1597,46 @@ export default function App() {
         document.body.removeChild(link);
     };
 
-    const handleImport = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            try {
-                const imported = JSON.parse(event.target.result);
-                if (Array.isArray(imported)) {
-                    openConfirm('データを上書きしますか？', () => {
-                        setSavedWords(imported);
-                        const uniqueFolders = new Set(['main', ...imported.map(w => w.folder || 'main')]);
-                        setFolders(Array.from(uniqueFolders));
-                        setToastMsg('復元しました');
+   const handleImport = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        try {
+            const imported = JSON.parse(event.target.result);
+            if (Array.isArray(imported)) {
+                openConfirm('データを上書きしますか？\n現在のデータはすべて置き換わります。', async () => {
+                    try {
+
+                        await db.transaction('rw', db.words, async () => {
+                            await db.words.clear();
+
+                            await db.words.bulkAdd(imported.map(({id, ...rest}) => rest));
+                        });
+
+
+                        const newWords = await db.words.toArray();
+                        setSavedWords(newWords.sort((a,b) => (b.addedAt || 0) - (a.addedAt || 0)));
+
+                        const uniqueFolders = new Set(['main', ...newWords.map(w => w.folder || 'main')]);
+                        const folderArray = Array.from(uniqueFolders);
+                        setFolders(folderArray);
+                        localStorage.setItem('aitan_folders', JSON.stringify(folderArray));
+
+                        setToastMsg('データを復元しました！');
                         setIsSettingsOpen(false);
-                    });
-                }
-            } catch (error) { openAlert('読み込み失敗'); }
-        };
-        reader.readAsText(file);
+                    } catch (dbError) {
+                        console.error(dbError);
+                        openAlert('データベースへの保存に失敗しました');
+                    }
+                });
+            }
+        } catch (error) {
+            openAlert('ファイルの読み込みに失敗しました');
+        }
     };
+    reader.readAsText(file);
+};
 
     const handleManualSync = async () => {
         if (!user || !db_firebase) return;
